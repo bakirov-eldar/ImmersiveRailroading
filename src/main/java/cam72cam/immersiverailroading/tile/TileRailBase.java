@@ -55,6 +55,8 @@ public class TileRailBase extends BlockEntityTrackTickable implements IRedstoneP
 	private boolean scaleModel = true;
 	@TagField("augment")
 	private Augment augment;
+	@TagField("augmentModel")
+	private String augmentModel;
 	@Deprecated
 	@TagField("augmentFilterID")
 	private String augmentFilterID;
@@ -148,6 +150,10 @@ public class TileRailBase extends BlockEntityTrackTickable implements IRedstoneP
 	}
 	
 	public void setAugment(Augment augment) {
+		setAugment(augment, null);
+	}
+
+	public void setAugment(Augment augment, String modelId) {
 		if (this.augment == Augment.FLUID_LOADER || this.augment == Augment.FLUID_UNLOADER) {
 			//Clear buffer tank
 			this.bufferTank.setCapacity(0);
@@ -155,6 +161,7 @@ public class TileRailBase extends BlockEntityTrackTickable implements IRedstoneP
 		}
 
 		this.augment = augment;
+		this.augmentModel = augment == null ? null : modelId;
 		Augment.Properties properties = new Augment.Properties("", "","",
 															   CouplerAugmentMode.ENGAGED,
 															   LocoControlMode.THROTTLE,
@@ -215,6 +222,10 @@ public class TileRailBase extends BlockEntityTrackTickable implements IRedstoneP
 
 	public Augment getAugment() {
 		return this.augment;
+	}
+
+	public String getAugmentModel() {
+		return this.augmentModel;
 	}
 
 	public Augment.Properties getAugmentProperties() {
@@ -1018,6 +1029,7 @@ public class TileRailBase extends BlockEntityTrackTickable implements IRedstoneP
 			ItemStack stack = new ItemStack(IRItems.ITEM_AUGMENT, 1);
 			ItemRailAugment.Data data = new ItemRailAugment.Data(stack);
 			data.augment = this.augment;
+			data.modelId = this.augmentModel;
 			data.gauge = this.augmentGauge;
 			data.write();
 			getWorld().dropItem(stack, getPos());

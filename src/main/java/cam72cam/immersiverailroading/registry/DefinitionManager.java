@@ -27,6 +27,7 @@ public class DefinitionManager {
     private static Map<String, EntityRollingStockDefinition> definitions;
     private static BiMultiMap<String, EntityRollingStockDefinition> stockTags;
     private static Map<String, TrackDefinition> tracks;
+    private static Map<String, AugmentDefinition> augments = Collections.emptyMap();
     private static final Map<String, StockLoader> stockLoaders;
 
     static {
@@ -107,6 +108,11 @@ public class DefinitionManager {
             }
         }
 
+        for (AugmentDefinition def : augments.values()) {
+            def.model.free();
+        }
+        augments = Collections.emptyMap();
+
 
         try {
             initGauges();
@@ -161,6 +167,60 @@ public class DefinitionManager {
         } catch (Exception e) {
             throw new RuntimeException("Unable to load tracks, do you have a broken pack?", e);
         }
+        try {
+            initAugments();
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to load augments, do you have a broken pack?", e);
+        }
+    }
+
+    private static void initAugments() throws IOException {
+        Map<String, AugmentDefinition> loaded = new LinkedHashMap<>();
+        List<DataBlock> indexes = new ArrayList<>();
+        for (InputStream input : new Identifier(ImmersiveRailroading.MODID, "augment/augment.json").getResourceStreamAll()) {
+            try (InputStream stream = input) {
+                indexes.add(JSON.parse(stream));
+            }
+        }
+        for (InputStream input : new Identifier(ImmersiveRailroading.MODID, "augment/augment.caml").getResourceStreamAll()) {
+            try (InputStream stream = input) {
+                indexes.add(CAML.parse(stream));
+            }
+        }
+
+        for (DataBlock index : indexes) {
+            List<DataBlock.Value> types = index.getValues("types");
+            if (types == null) continue;
+            for (DataBlock.Value value : types) {
+                String name = value.asString();
+                if (name == null || name.isEmpty()) continue;
+                String id = ImmersiveRailroading.MODID + ":augment/" + name + ".json";
+                if (loaded.containsKey(id)) continue;
+                Identifier resource = new Identifier(id);
+                if (!resource.canLoad()) {
+                    resource = new Identifier(resource.getDomain(), resource.getPath().replace(".json", ".caml"));
+                }
+                if (!resource.canLoad()) {
+                    ImmersiveRailroading.error("Unable to load augment '%s': file not found", id);
+                    continue;
+                }
+                try {
+                    loaded.put(id, new AugmentDefinition(id, DataBlock.load(resource)));
+                } catch (Exception e) {
+                    ImmersiveRailroading.error("Error loading augment %s", id);
+                    ImmersiveRailroading.catching(e);
+                }
+            }
+        }
+        augments = loaded;
+    }
+
+    public static Collection<AugmentDefinition> getAugmentDefinitions() {
+        return Collections.unmodifiableCollection(augments.values());
+    }
+
+    public static AugmentDefinition getAugmentDefinition(String id) {
+        return augments.get(id);
     }
 
     private static void initModels() throws IOException {

@@ -4,6 +4,8 @@ import cam72cam.immersiverailroading.IRItems;
 import cam72cam.immersiverailroading.library.Augment;
 import cam72cam.immersiverailroading.library.Gauge;
 import cam72cam.immersiverailroading.library.TrackItems;
+import cam72cam.immersiverailroading.registry.AugmentDefinition;
+import cam72cam.immersiverailroading.registry.DefinitionManager;
 import cam72cam.immersiverailroading.render.rail.RailRender;
 import cam72cam.immersiverailroading.tile.TileRail;
 import cam72cam.immersiverailroading.tile.TileRailBase;
@@ -12,6 +14,7 @@ import cam72cam.mod.MinecraftClient;
 import cam72cam.mod.entity.Player;
 import cam72cam.mod.item.ItemStack;
 import cam72cam.mod.render.StandardModel;
+import cam72cam.mod.render.common.ModelRenderer;
 import cam72cam.mod.render.cutter.BlockCutHelper;
 import cam72cam.mod.math.Plane;
 import util.Matrix4;
@@ -57,7 +60,22 @@ public class RailBaseModel {
 		else bedblockMatrix4 = new Matrix4().translate(0, -bedHeight, 0).scale(1, 1 + bedHeight, 1);
 
 		if (augment != null) {
-			model.addColorBlock(augment.color(), bedFace == null ? bedblockMatrix4 : new Matrix4(), bedFace);
+			String modelId = te.getAugmentModel();
+			if (modelId == null || modelId.isEmpty()) {
+				model.addColorBlock(augment.color(), bedFace == null ? bedblockMatrix4 : new Matrix4(), bedFace);
+				return model;
+			}
+			StandardModel fallback = new StandardModel().addColorBlock(augment.color(), bedFace == null ? bedblockMatrix4 : new Matrix4(), bedFace);
+			model.addCustom((state, pt) -> {
+				AugmentDefinition definition = modelId == null ? null : DefinitionManager.getAugmentDefinition(modelId);
+				if (definition == null || definition.augment != augment) {
+					fallback.render(state);
+				} else {
+					try (ModelRenderer.Binding bound = ModelRenderer.getRendererFor(definition.model).bind(state)) {
+						bound.enqueueTransparent();
+					}
+				}
+			});
 			return model;
 		}
 

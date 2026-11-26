@@ -5,6 +5,8 @@ import cam72cam.immersiverailroading.library.Augment;
 import cam72cam.immersiverailroading.library.Gauge;
 import cam72cam.immersiverailroading.library.GuiText;
 import cam72cam.immersiverailroading.library.Permissions;
+import cam72cam.immersiverailroading.registry.AugmentDefinition;
+import cam72cam.immersiverailroading.registry.DefinitionManager;
 import cam72cam.immersiverailroading.tile.TileRail;
 import cam72cam.immersiverailroading.tile.TileRailBase;
 import cam72cam.immersiverailroading.util.BlockUtil;
@@ -78,7 +80,7 @@ public class ItemRailAugment extends CustomItem {
 					}
 
 					if(world.isServer) {
-						te.setAugment(data.augment);
+						te.setAugment(data.augment, data.modelId);
 						if (!player.isCreative()) {
 							stack.setCount(stack.getCount()-1);
 						}
@@ -105,6 +107,16 @@ public class ItemRailAugment extends CustomItem {
 				data.augment = augment;
 				data.write();
                 items.add(stack);
+				for (AugmentDefinition definition : DefinitionManager.getAugmentDefinitions()) {
+					if (definition.augment == augment) {
+						ItemStack variant = new ItemStack(this, 1);
+						Data variantData = new Data(variant);
+						variantData.augment = augment;
+						variantData.modelId = definition.id;
+						variantData.write();
+						items.add(variant);
+					}
+				}
         	}
         }
 		return items;
@@ -118,7 +130,12 @@ public class ItemRailAugment extends CustomItem {
 
 	@Override
 	public String getCustomName(ItemStack stack) {
-		return new Data(stack).augment.toString();
+		Data data = new Data(stack);
+		AugmentDefinition definition = data.modelId == null ? null : DefinitionManager.getAugmentDefinition(data.modelId);
+		if (definition != null && definition.augment == data.augment) {
+			return data.augment.toString() + " - " + definition.name;
+		}
+		return data.augment.toString();
 	}
 
 	public static class Data extends ItemDataSerializer {
@@ -126,6 +143,8 @@ public class ItemRailAugment extends CustomItem {
 		public Gauge gauge;
 		@TagField("augment")
 		public Augment augment;
+		@TagField("model_id")
+		public String modelId;
 
 		public Data(ItemStack stack) {
 			super(stack);
