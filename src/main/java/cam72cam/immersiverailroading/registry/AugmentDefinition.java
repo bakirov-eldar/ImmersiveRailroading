@@ -13,6 +13,7 @@ public class AugmentDefinition {
     public final String name;
     public final Augment augment;
     public final Model model;
+    public final boolean alignToTrack;
 
     AugmentDefinition(String id, DataBlock data) throws Exception {
         this.id = id;
@@ -23,6 +24,7 @@ public class AugmentDefinition {
             throw new IllegalArgumentException("Augment definition requires augment and model");
         }
         this.augment = Augment.valueOf(type);
+        this.alignToTrack = data.getValue("align_to_track").asBoolean(false);
         Identifier resource = modelPath.contains(":") ? new Identifier(modelPath) : new Identifier(ImmersiveRailroading.MODID, modelPath);
         this.model = ModelLoader.load(resource);
     }

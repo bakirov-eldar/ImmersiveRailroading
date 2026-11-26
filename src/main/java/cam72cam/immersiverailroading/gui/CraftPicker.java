@@ -83,7 +83,7 @@ public class CraftPicker {
         	stock.add(new ItemStack(IRItems.ITEM_CAST_RAIL, 1));
         	stock.addAll(IRFuzzy.steelIngotOrFallback().enumerate());
         	stock.addAll(IRFuzzy.steelBlockOrFallback().enumerate());
-	        stock.addAll(IRItems.ITEM_AUGMENT.getItemVariants(ItemTabs.MAIN_TAB));
+	        stock.addAll(IRItems.ITEM_AUGMENT.getItemVariants(ItemTabs.AUGMENT_TAB));
 		}
 		else if (craftType.isPlate()) {
 			for (PlateType value : PlateType.values()) {

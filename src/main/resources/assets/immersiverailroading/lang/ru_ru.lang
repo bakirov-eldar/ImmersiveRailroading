@@ -256,6 +256,7 @@ immersiverailroading:crafting_type.plate_large=Вальцовка большой
 immersiverailroading:crafting_type.plate_boiler=Вальцовка универсальной котловой пластины на прокатном стане, затем обработка на котловом вальцовочном стане
 
 itemGroup.immersiverailroading.main=Immersive Railroading
+itemGroup.immersiverailroading.augment=Дополнения Immersive Railroading
 itemGroup.immersiverailroading.locomotive=Локомотивы Immersive Railroading
 itemGroup.immersiverailroading.stock=Грузовой подвижной состав Immersive Railroading
 itemGroup.immersiverailroading.passenger=Пассажирский подвижной состав Immersive Railroading

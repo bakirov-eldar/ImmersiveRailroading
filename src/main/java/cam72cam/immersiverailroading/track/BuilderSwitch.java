@@ -144,4 +144,9 @@ public class BuilderSwitch extends BuilderBase implements IIterableTrack {
 	public List<VecYPR> getPath(double stepSize) {
 		return realStraightBuilder.getPath(stepSize);
 	}
+
+	/** Both physical routes, even when neither route is subdivided. */
+	public List<BuilderBase> getAlignmentBuilders() {
+		return java.util.Arrays.asList(turnBuilder, realStraightBuilder);
+	}
 }

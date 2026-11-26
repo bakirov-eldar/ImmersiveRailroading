@@ -37,7 +37,7 @@ public class ItemRailAugment extends CustomItem {
 
 	@Override
 	public List<CreativeTab> getCreativeTabs() {
-		return Collections.singletonList(ItemTabs.MAIN_TAB);
+		return Collections.singletonList(ItemTabs.AUGMENT_TAB);
 	}
 
 
@@ -96,7 +96,7 @@ public class ItemRailAugment extends CustomItem {
 	public List<ItemStack> getItemVariants(CreativeTab tab)
     {
 		List<ItemStack> items = new ArrayList<>();
-        if (tab == null || tab.equals(ItemTabs.MAIN_TAB))
+        if (tab == null || tab.equals(ItemTabs.AUGMENT_TAB))
         {
         	for (Augment augment : Augment.values()) {
         		if (augment == Augment.WATER_TROUGH) {

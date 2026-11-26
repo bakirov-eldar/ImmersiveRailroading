@@ -336,6 +336,7 @@ immersiverailroading:crafting_type.plate_large=Rolling as Large Plate in Plate M
 immersiverailroading:crafting_type.plate_boiler=Rolling as Boiler Plate in Plate Machine, then processing in Boiler Machine
 
 itemGroup.immersiverailroading.main=Immersive Railroading
+itemGroup.immersiverailroading.augment=Immersive Railroading Augments
 itemGroup.immersiverailroading.locomotive=Immersive Railroading Locomotives
 itemGroup.immersiverailroading.stock=Immersive Railroading Stock
 itemGroup.immersiverailroading.passenger=Immersive Railroading Passenger

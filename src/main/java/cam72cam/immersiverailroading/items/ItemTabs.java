@@ -10,6 +10,7 @@ import java.util.List;
 public class ItemTabs {
 
 	public static CreativeTab MAIN_TAB;
+	public static CreativeTab AUGMENT_TAB;
 	public static CreativeTab LOCOMOTIVE_TAB;
 	public static CreativeTab STOCK_TAB;
     public static CreativeTab PASSENGER_TAB;
@@ -17,6 +18,7 @@ public class ItemTabs {
 
 	static {
 		MAIN_TAB = new CreativeTab(ImmersiveRailroading.MODID + ".main", () -> new ItemStack(IRItems.ITEM_LARGE_WRENCH, 1));
+		AUGMENT_TAB = new CreativeTab(ImmersiveRailroading.MODID + ".augment", () -> new ItemStack(IRItems.ITEM_AUGMENT, 1));
 		LOCOMOTIVE_TAB = new CreativeTab(ImmersiveRailroading.MODID + ".locomotive", () -> {
 			List<ItemStack> items = IRItems.ITEM_ROLLING_STOCK.getItemVariants(LOCOMOTIVE_TAB);
 			if (items.size() == 0) {

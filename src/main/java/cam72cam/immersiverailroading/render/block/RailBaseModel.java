@@ -66,12 +66,26 @@ public class RailBaseModel {
 				return model;
 			}
 			StandardModel fallback = new StandardModel().addColorBlock(augment.color(), bedFace == null ? bedblockMatrix4 : new Matrix4(), bedFace);
+			RailInfo[] cachedInfo = { null };
+			float[] cachedRotation = { 0 };
 			model.addCustom((state, pt) -> {
 				AugmentDefinition definition = modelId == null ? null : DefinitionManager.getAugmentDefinition(modelId);
 				if (definition == null || definition.augment != augment) {
 					fallback.render(state);
 				} else {
-					try (ModelRenderer.Binding bound = ModelRenderer.getRendererFor(definition.model).bind(state)) {
+					var modelState = state.clone();
+					if (definition.alignToTrack) {
+						TileRail parent = te.getParent() != null && te.getWorld().isBlockLoaded(te.getParent())
+								? te.getParentTile() : null;
+						if (parent != null) {
+							if (cachedInfo[0] != parent.info) {
+								cachedRotation[0] = AugmentTrackAlignment.rotation(te, parent);
+								cachedInfo[0] = parent.info;
+							}
+							modelState.translate(0.5, 0, 0.5).rotate(cachedRotation[0], 0, 1, 0).translate(-0.5, 0, -0.5);
+						}
+					}
+					try (ModelRenderer.Binding bound = ModelRenderer.getRendererFor(definition.model).bind(modelState)) {
 						bound.enqueueTransparent();
 					}
 				}
