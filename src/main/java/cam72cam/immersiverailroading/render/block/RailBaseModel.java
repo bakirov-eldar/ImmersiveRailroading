@@ -9,6 +9,7 @@ import cam72cam.immersiverailroading.registry.DefinitionManager;
 import cam72cam.immersiverailroading.render.rail.RailRender;
 import cam72cam.immersiverailroading.tile.TileRail;
 import cam72cam.immersiverailroading.tile.TileRailBase;
+import cam72cam.immersiverailroading.util.AugmentTrackAlignment;
 import cam72cam.immersiverailroading.util.RailInfo;
 import cam72cam.mod.MinecraftClient;
 import cam72cam.mod.entity.Player;
@@ -66,8 +67,6 @@ public class RailBaseModel {
 				return model;
 			}
 			StandardModel fallback = new StandardModel().addColorBlock(augment.color(), bedFace == null ? bedblockMatrix4 : new Matrix4(), bedFace);
-			RailInfo[] cachedInfo = { null };
-			float[] cachedRotation = { 0 };
 			model.addCustom((state, pt) -> {
 				AugmentDefinition definition = modelId == null ? null : DefinitionManager.getAugmentDefinition(modelId);
 				if (definition == null || definition.augment != augment) {
@@ -78,11 +77,10 @@ public class RailBaseModel {
 						TileRail parent = te.getParent() != null && te.getWorld().isBlockLoaded(te.getParent())
 								? te.getParentTile() : null;
 						if (parent != null) {
-							if (cachedInfo[0] != parent.info) {
-								cachedRotation[0] = AugmentTrackAlignment.rotation(te, parent);
-								cachedInfo[0] = parent.info;
-							}
-							modelState.translate(0.5, 0, 0.5).rotate(cachedRotation[0], 0, 1, 0).translate(-0.5, 0, -0.5);
+							AugmentTrackAlignment.Alignment alignment = AugmentTrackAlignment.get(te, parent);
+							modelState.translate(0.5 + alignment.offsetX, 0, 0.5 + alignment.offsetZ)
+									.rotate(alignment.rotation, 0, 1, 0)
+									.translate(-0.5, 0, -0.5);
 						}
 					}
 					try (ModelRenderer.Binding bound = ModelRenderer.getRendererFor(definition.model).bind(modelState)) {
