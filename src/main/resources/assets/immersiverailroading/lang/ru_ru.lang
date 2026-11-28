@@ -11,6 +11,7 @@ item.immersiverailroading:item_augment.FLUID_UNLOADER.name=Модуль разг
 item.immersiverailroading:item_augment.DETECTOR.name=Датчик
 item.immersiverailroading:item_augment.COUPLER.name=Модуль автосцепки
 item.immersiverailroading:item_augment.ACTUATOR.name=Привод дверей
+item.immersiverailroading:item_augment.DECORATIVE.name=Декоративное дополнение пути
 item.immersiverailroading:item_rail_part.name=Сегмент рельса
 item.immersiverailroading:item_cast_rail.name=Заготовка рельса
 item.immersiverailroading:item_manual.name=Руководство по эксплуатации

@@ -107,17 +107,18 @@ public class ItemRailAugment extends CustomItem {
 				data.augment = augment;
 				data.write();
                 items.add(stack);
-				for (AugmentDefinition definition : DefinitionManager.getAugmentDefinitions()) {
-					if (definition.augment == augment) {
-						ItemStack variant = new ItemStack(this, 1);
-						Data variantData = new Data(variant);
-						variantData.augment = augment;
-						variantData.modelId = definition.id;
-						variantData.write();
-						items.add(variant);
-					}
-				}
         	}
+			for (AugmentDefinition definition : DefinitionManager.getAugmentDefinitions()) {
+				if (definition.augment == Augment.WATER_TROUGH) {
+					continue;
+				}
+				ItemStack variant = new ItemStack(this, 1);
+				Data variantData = new Data(variant);
+				variantData.augment = definition.augment;
+				variantData.modelId = definition.id;
+				variantData.write();
+				items.add(variant);
+			}
         }
 		return items;
     }

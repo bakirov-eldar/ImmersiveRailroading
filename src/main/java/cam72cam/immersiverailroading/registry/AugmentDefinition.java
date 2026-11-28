@@ -7,7 +7,7 @@ import cam72cam.mod.model.common.ModelLoader;
 import cam72cam.mod.model.common.mesh.Model;
 import cam72cam.mod.resource.Identifier;
 
-/** A resource-pack appearance for an existing functional rail augment. */
+/** A resource-pack appearance for a rail augment. */
 public class AugmentDefinition {
     public final String id;
     public final String name;

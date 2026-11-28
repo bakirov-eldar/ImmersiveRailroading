@@ -18,6 +18,7 @@ public enum Augment {
 	DETECTOR,
 	COUPLER,
 	ACTUATOR,
+	DECORATIVE,
 	;
 	
 	public Color color() {
